@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/sturmE/sph">View on GitHub</a>
 
           <h1 id="project_title">SPH</h1>
-          <h2 id="project_tagline"></h2>
+          <h2 id="project_tagline">Particle based fluid simulation</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/sturmE/sph/zipball/master">Download this project as a .zip file</a>
@@ -32,36 +32,47 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="Reference Papers" class="anchor" href="#Reference Papers"><span class="octicon octicon-link"></span></a>Reference Papers</h3>
+<ul>
+  <li><a href="http://dl.acm.org/citation.cfm?id=1073400">Particle-based Viscoelastic Fluid Simulation (1)</a></li>
+  <li><a href="http://dl.acm.org/citation.cfm?id=846298">Particle-Based Fluid Simulation for Interactive Applications (2)</a></li>
+  <li><a href="http://image.diku.dk/projects/media/kelager.06.pdf">Lagrangian Fluid Dynamics Using Smoothed Particle Hydrodynamics (3)</a></li>
+</ul>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <h3>
+<a name="Implementation" class="anchor" href="#Implementation"><span class="octicon octicon-link"></span></a>Implementation</h3>
+<p>
+Three papers I looked at the most. Papers (1) and (3) were the main papers I did implementation around. The main difference between paper (3) and (1) is that in paper (3) we compute everything into forces then apply those forces (F=ma) to the particles. In paper (1), we instead figure out “relaxed” position by using more computed parameters such as the near density and the near pressure. Near density is density but using a different kernel and near pressure uses the near density to apply additional pressure to the particle.</p><p>
+Couple key things I learned when doing this.
+<ul><li>The timestep you use can change everything. It can be the one thing killing your simulations.</li>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<li>It is important to create good spatial grids and pick neighbors smartly</li>
+<li> Don’t use glm math, math library functions because they apparently are slow</li></ul>
+</p>
+        <h3>
+<a name="Difficulties" class="anchor" href="#Difficulties"><span class="octicon octicon-link"></span></a>Difficulties</h3>
+<p>
+When implementing paper (3), I was quite sure that I had all of the equations working correctly but I was calculating massive forces to be applied to the particles. In retrospect this was probably because of my timestep but I hadn’t figured out how big of a deal the timestep was. Along with the timestep, my spatial grid was very slow. This was causing single digit framerates for greater than 100 particles.
+After being unable to figure out the issues with paper (3), I tried implementing paper (1). After feeling like I had the maths correct and nothing was working, I found a blog post where someone detailed their efforts in implementing multiple sph algorithms. In regards to the paper I was implementing, they had had some modifications. One example was that they used a different kernel and added in surface tension calculation, which I had been lacking. Using these modifications didn’t help until I decided to start playing with the timestep. Once I found out how big of an impact the timestep can make in the simulations, I was able to get the simulation under control a make it look decent.
+</p>
+<p>
+The last thing I did was speed up the simulation was to hijack someone else’s idea on getting particles neighbors. Originally, I was iterating over all neighboring cells for every particle and finding neighbors every single time. To speed this up, I changed it to store the neighbors used in the pressure and density calculations for later use.
+</p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+       <h3>
+<a name="Videos" class="anchor" href="#Videos"><span class="octicon octicon-link"></span></a>Videos</h3>
+<center>
+  <video width="640" controls>
+  <source src="good fluid.mp4" type="video/mp4">
+  
+</video>
+</center>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<center>
+  <video width="600" controls>
+  <source src="lava lamp.mp4" type="video/mp4">
+</video>
+</center>
       </section>
     </div>
 
