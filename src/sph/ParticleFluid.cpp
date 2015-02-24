@@ -33,6 +33,14 @@ const vector<FluidParticle*>& ParticleFluid::getParticles() const {
 	return _particles;
 }
 
+void ParticleFluid::doit(glm::vec3 vel) {
+    for(int idx = 0; idx < _particles.size(); ++idx) {
+        FluidParticle* p = _particles[idx];
+        p->v[0] = (float)rand()/RAND_MAX * 15;
+        p->v[1] = (float)rand()/RAND_MAX * 15;
+    }
+}
+
 // float ParticleFluid::getStiffness() const {
 // 	return stiffness;
 // }

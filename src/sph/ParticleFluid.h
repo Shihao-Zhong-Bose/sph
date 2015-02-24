@@ -57,6 +57,7 @@ public:
 public:
 	ParticleFluid(int maxParticles);
 	void addParticles(vector<FluidParticle*> particles);
+    void doit(glm::vec3 velo);
 
 	const vector<FluidParticle*>& getParticles() const;
 

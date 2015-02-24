@@ -17,15 +17,15 @@ struct FluidDesc {
 };
 
 //----- constants
-const int screenWidth = 800;
-const int screenHeight = 600;
+const int screenWidth = 300;
+const int screenHeight = 200;
 const float viewWidth = 10.f;
 const float viewHeight = (screenHeight * viewWidth) / screenWidth;
 
 // play with these
 const int usePreset = 1; // set to -1 for none;
 const bool startWithParticles = true;
-const bool useEmitters = true;
+const bool useEmitters = false;
 const float densityAtRest = 40.f; //82.f
 const float stiffness = 0.08f;
 const float nearStiffness = 0.01f;
@@ -206,7 +206,9 @@ int main(int argc, char** argv) {
 	float startFrame = 0;
 	float endFrame = 0;
 	float accumulate = 0;
+    float accumulate2 = 0;
 	float frameTime = 0;
+
 	while (!glfwWindowShouldClose(window)) {
 		if(glfwGetKey(window, GLFW_KEY_ESCAPE)) break;
 		
@@ -232,6 +234,7 @@ int main(int argc, char** argv) {
 		endFrame = glfwGetTime();
 		frameTime = endFrame - startFrame;
 		accumulate += frameTime;
+        accumulate2 += frameTime;
 		frameCount++;
 
 		//update caption every second
@@ -243,6 +246,11 @@ int main(int argc, char** argv) {
 			accumulate = 0;
 			frameCount = 0;
 		}
+
+        if(accumulate2 > 20.f) {
+            accumulate2 = 0;
+            fluid->doit(glm::vec3());
+        }
 	}
 
 	glfwTerminate();

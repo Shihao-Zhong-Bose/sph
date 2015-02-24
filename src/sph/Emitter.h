@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "ParticleFluid.h"
-#include "Constants.h"
+
 using namespace std;
 
 class Emitter {
